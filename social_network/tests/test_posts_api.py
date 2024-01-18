@@ -46,7 +46,7 @@ class TestPostsAPI:
 
         response = api_client_auth.get(url)
         content = response.json()
-
+        print(content)
         assert response.status_code == 200
         assert content['title'] == post.title
         assert content['author'] == post.author.username

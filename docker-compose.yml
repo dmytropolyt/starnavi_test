@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./social_network/Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./social_network:/social_network
+      - static_volume:/social_network/staticfiles
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  bot:
+    build:
+      context: .
+      dockerfile: ./bot/Dockerfile
+    command: sh -c "while ! curl -s http://127.0.0.1:8000; do sleep 5; done && 
+                    python src/main.py"
+    depends_on:
+      - web
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=myblog
+      - POSTGRES_PASSWORD=my_blog
+      - POSTGRES_DB=myblog_db
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
