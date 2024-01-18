@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 from environs import Env
 
@@ -30,6 +31,9 @@ SECRET_KEY = env('SECRET_KEY', 'changeme')
 DEBUG = env.int('DEBUG')
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(None, os.environ.get('ALLOWED_HOSTS', '').split(' '))
+)
 
 
 # Application definition

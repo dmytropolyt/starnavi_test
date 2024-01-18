@@ -38,6 +38,7 @@ class Bot:
                 {'username': user.get('username'),
                  'password': user.get('password')}
             )
+
             headers = {'Authorization': f'Bearer {response.json()["access"]}'}
             user['header_auth'] = headers
 
@@ -84,4 +85,5 @@ class Bot:
 
 if __name__ == '__main__':
     bot = Bot()
+    bot.user_create_posts()
     bot.like_random_posts()
