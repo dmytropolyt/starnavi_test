@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./bot/Dockerfile
-    command: sh -c "while ! curl -s http://127.0.0.1:8000; do sleep 5; done && 
+    command: sh -c "while ! curl -s http://web:8000; do sleep 5; done && 
                     python src/main.py"
     depends_on:
       - web
