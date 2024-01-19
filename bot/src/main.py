@@ -18,7 +18,7 @@ class Bot:
                 'username': fake.user_name(),
                 'password': (password := fake.password()),
                 'password2': password
-            } for i in range(settings.NUMBER_OF_USERS)
+            } for _ in range(settings.NUMBER_OF_USERS)
         ]
 
         for user in users_data:
@@ -29,9 +29,10 @@ class Bot:
 
         return users_data
 
-    def users_login(self) -> list[dict[str, Union[str, dict]]]:
-        users_data = self.signup_users()
-
+    @staticmethod
+    def users_login(
+            users_data: list[dict[str, Union[str, dict]]]
+    ) -> list[dict[str, Union[str, dict]]]:
         for user in users_data:
             response = requests.post(
                 settings.TOKEN_OBTAIN_URL,
@@ -54,7 +55,9 @@ class Bot:
             requests.post(url, headers=headers, data=data)
 
     def user_create_posts(self) -> None:
-        users_data = self.users_login()
+        new_users = self.signup_users()
+        users_data = self.users_login(new_users)
+
         for user in users_data:
             self.post_request_random_times(
                 settings.MAX_POSTS_PER_USER,
@@ -65,7 +68,8 @@ class Bot:
             )
 
     def like_random_posts(self) -> None:
-        users_data = self.users_login()
+        new_users = self.signup_users()
+        users_data = self.users_login(new_users)
 
         first_user = users_data[0]
         all_posts_count = len(requests.get(
